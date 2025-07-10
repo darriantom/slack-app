@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifySlackRequest } from '../middleware';
 
 // This function processes incoming Slack slash commands
 export async function POST(request: NextRequest) {
