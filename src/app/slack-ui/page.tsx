@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export default function SlackUI() {
-  const [text, setText] = useState('status');
+  const [text, setText] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +42,7 @@ export default function SlackUI() {
             onChange={(e) => setText(e.target.value)}
             className="w-full p-2 border rounded"
           >
-            <option value="status">linkedin</option>
+            <option value="linkedin">linkedin</option>
             <option value="restart">Restart Service</option>
             <option value="metrics">View Metrics</option>
             <option value="help">Help</option>
