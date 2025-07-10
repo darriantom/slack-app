@@ -30,30 +30,39 @@ export async function POST(request: NextRequest) {
     if (text.includes('linkedin')) {
       response = "🟢 Service is running normally";
     } else if (text.includes('restart')) {
-      const client = new ApifyClient({
-          token: process.env.APIFY_API_TOKEN,
-      });
-      
-      // Prepare Actor input
-      const input = {
-          "profileUrls": [
-              "https://www.linkedin.com/in/williamhgates",
-              "http://www.linkedin.com/in/jeannie-wyrick-b4760710a"
-          ]
-      };
-      const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+      try {
+        const client = new ApifyClient({
+            token: process.env.APIFY_API_TOKEN,
+        });
+        
+        // Prepare Actor input
+        const input = {
+            "profileUrls": [
+                "https://www.linkedin.com/in/williamhgates",
+                "http://www.linkedin.com/in/jeannie-wyrick-b4760710a"
+            ]
+        };
+        
+        response = "🔄 Starting LinkedIn profile fetch...";
+        const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
 
-      // Fetch and print Actor results from the run's dataset (if any)
-      console.log('Results from dataset');
-      const { items } = await client.dataset(run.defaultDatasetId).listItems();
-      // console.log(items)
-      items.forEach((item) => {
-          console.dir(item);
-          response += `\n${item.fullName} ${item.headline}`
-      });
-      response = "🔄 Service restart initiated";
-      // Here you would call your actual service restart logic
-    } else if (text.includes('metrics')) {
+        // Fetch and print Actor results from the run's dataset (if any)
+        console.log('Results from dataset');
+        const { items } = await client.dataset(run.defaultDatasetId).listItems();
+        
+        if (items && items.length > 0) {
+          response = "LinkedIn profiles fetched successfully:\n";
+          items.forEach((item) => {
+              response += `\n• ${item.fullName} - ${item.headline}`;
+          }); 
+        } else {
+          response += "\nNo profiles found.";
+        }
+      } catch (apiError) {
+        console.error('Apify API error:', apiError);
+        response = "⚠️ Error fetching LinkedIn profiles. Please check server logs.";
+      }
+    }  else if (text.includes('metrics')) {
       // const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
 
       // // Fetch and print Actor results from the run's dataset (if any)
