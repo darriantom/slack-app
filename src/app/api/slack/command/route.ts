@@ -41,29 +41,30 @@ export async function POST(request: NextRequest) {
     if (text.includes('linkedin')) {
       response = "🟢 Service is running normally";
     } else if (text.includes('restart')) {
-      const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+      // const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
 
-      // Fetch and print Actor results from the run's dataset (if any)
-      console.log('Results from dataset');
-      const { items } = await client.dataset(run.defaultDatasetId).listItems();
-      // console.log(items)
-      items.forEach((item) => {
-          console.dir(item);
-          response += `\n${item.fullName} ${item.headline}`
-      });
-      // response = "🔄 Service restart initiated";
+      // // Fetch and print Actor results from the run's dataset (if any)
+      // console.log('Results from dataset');
+      // const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      // // console.log(items)
+      // items.forEach((item) => {
+      //     console.dir(item);
+      //     response += `\n${item.fullName} ${item.headline}`
+      // });
+      response = "🔄 Service restart initiated";
       // Here you would call your actual service restart logic
     } else if (text.includes('metrics')) {
-      const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+      // const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
 
-      // Fetch and print Actor results from the run's dataset (if any)
-      console.log('Results from dataset');
-      const { items } = await client.dataset(run.defaultDatasetId).listItems();
-      // console.log(items)
-      items.forEach((item) => {
-          console.dir(item);
-          response += `\n${item.fullName} ${item.headline}`
-      });
+      // // Fetch and print Actor results from the run's dataset (if any)
+      // console.log('Results from dataset');
+      // const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      // // console.log(items)
+      // items.forEach((item) => {
+      //     console.dir(item);
+      //     response += `\n${item.fullName} ${item.headline}`
+      // });
+      response = "metrics";
     } else if (text.includes('help')) {
       response = "Available commands:\n- status: Check service status\n- restart: Restart the service\n- metrics: View service metrics\n- help: Show this help message";
     } else {
