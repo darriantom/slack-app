@@ -54,7 +54,16 @@ export async function POST(request: NextRequest) {
       // response = "🔄 Service restart initiated";
       // Here you would call your actual service restart logic
     } else if (text.includes('metrics')) {
-      response = "📊 Service metrics:\n- Uptime: 99.9%\n- Response time: 120ms\n- Error rate: 0.01%";
+      const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+
+      // Fetch and print Actor results from the run's dataset (if any)
+      console.log('Results from dataset');
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      // console.log(items)
+      items.forEach((item) => {
+          console.dir(item);
+          response += `\n${item.fullName} ${item.headline}`
+      });
     } else if (text.includes('help')) {
       response = "Available commands:\n- status: Check service status\n- restart: Restart the service\n- metrics: View service metrics\n- help: Show this help message";
     } else {
