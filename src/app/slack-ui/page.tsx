@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 export default function SlackUI() {
-  const [command, setCommand] = useState('/service');
   const [text, setText] = useState('status');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,7 +13,7 @@ export default function SlackUI() {
     
     try {
       const formData = new FormData();
-      formData.append('command', command);
+      formData.append('command', "command");
       formData.append('text', text);
       formData.append('user_id', 'U12345678');
       
