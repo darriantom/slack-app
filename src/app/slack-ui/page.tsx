@@ -7,7 +7,7 @@ export default function SlackUI() {
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     
@@ -25,7 +25,7 @@ export default function SlackUI() {
       const data = await res.json();
       setResponse(data.text || JSON.stringify(data, null, 2));
     } catch (err) {
-      setResponse('Error: ' + (err.message || 'Unknown error'));
+      setResponse('Error: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
