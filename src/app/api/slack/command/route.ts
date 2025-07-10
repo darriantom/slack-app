@@ -27,9 +27,58 @@ export async function POST(request: NextRequest) {
     let response = '';
     
     // Example service-related command processing based on input text
-    if (text.includes('linkedin')) {
-      response = "🟢 Service is running normally";
-    } else if (text.includes('restart')) {
+    if (text.includes('restart')) {
+      try {
+        const client = new ApifyClient({
+            token: process.env.APIFY_API_TOKEN || '',
+        });
+        
+        // Extract LinkedIn profile URL from the command text
+        const urlMatch = text.match(/(https?:\/\/[^\s]+)/);
+        const profileUrl = urlMatch ? urlMatch[0] : null;
+        
+        if (!profileUrl || !profileUrl.includes('linkedin.com/in/')) {
+          return NextResponse.json({
+            response_type: 'in_channel',
+            text: "⚠️ Please provide a valid LinkedIn profile URL. Example: `/command linkedin https://www.linkedin.com/in/username`"
+          });
+        }
+        
+        // Prepare Actor input with the URL from the command
+        const input = {
+            "profileUrls": [profileUrl]
+        };
+        
+        // Call the Apify actor
+        const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+        
+        if (!run || !run.defaultDatasetId) {
+          return NextResponse.json({
+            response_type: 'in_channel',
+            text: "⚠️ Error: Could not create Apify actor run. Please check your API token."
+          });
+        }
+
+        // Fetch results from the dataset
+        const { items } = await client.dataset(run.defaultDatasetId).listItems();
+        
+        if (items && items.length > 0) {
+          response = `✅ LinkedIn profile fetched successfully:\n\n`;
+          const profile = items[0];
+          
+          // Build a formatted response with the profile data
+          response += `*Name:* ${profile.fullName || 'N/A'}\n`;
+          response += `*Headline:* ${profile.headline || 'N/A'}\n`;
+          if (profile.location) response += `*Location:* ${profile.location}\n`;
+          if (profile.summary) response += `*Summary:* ${profile.summary}\n`;
+        } else {
+          response = "⚠️ No profile data found. The profile might be private or the URL is incorrect.";
+        }
+      } catch (apiError) {
+        console.error('Apify API error:', apiError);
+        response = "⚠️ Error fetching LinkedIn profile. Please check that your APIFY_API_TOKEN is set correctly in environment variables.";
+      }
+    } else if (text.includes('linkedin')) {
       try {
         const client = new ApifyClient({
             token: process.env.APIFY_API_TOKEN,
@@ -38,8 +87,7 @@ export async function POST(request: NextRequest) {
         // Prepare Actor input
         const input = {
             "profileUrls": [
-                "https://www.linkedin.com/in/williamhgates",
-                "http://www.linkedin.com/in/jeannie-wyrick-b4760710a"
+                text,
             ]
         };
         
