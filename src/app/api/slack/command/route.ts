@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import { ApifyClient } from 'apify-client';
+import { ApifyClient } from 'apify-client';
 
 // Initialize the ApifyClient with API token
 // This function processes incoming Slack slash commands
@@ -30,27 +30,27 @@ export async function POST(request: NextRequest) {
     if (text.includes('linkedin')) {
       response = "🟢 Service is running normally";
     } else if (text.includes('restart')) {
-      // const client = new ApifyClient({
-      //     token: process.env.APIFY_API_TOKEN,
-      // });
+      const client = new ApifyClient({
+          token: process.env.APIFY_API_TOKEN,
+      });
       
-      // // Prepare Actor input
-      // const input = {
-      //     "profileUrls": [
-      //         "https://www.linkedin.com/in/williamhgates",
-      //         "http://www.linkedin.com/in/jeannie-wyrick-b4760710a"
-      //     ]
-      // };
-      // const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
+      // Prepare Actor input
+      const input = {
+          "profileUrls": [
+              "https://www.linkedin.com/in/williamhgates",
+              "http://www.linkedin.com/in/jeannie-wyrick-b4760710a"
+          ]
+      };
+      const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
 
-      // // Fetch and print Actor results from the run's dataset (if any)
-      // console.log('Results from dataset');
-      // const { items } = await client.dataset(run.defaultDatasetId).listItems();
-      // // console.log(items)
-      // items.forEach((item) => {
-      //     console.dir(item);
-      //     response += `\n${item.fullName} ${item.headline}`
-      // });
+      // Fetch and print Actor results from the run's dataset (if any)
+      console.log('Results from dataset');
+      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      // console.log(items)
+      items.forEach((item) => {
+          console.dir(item);
+          response += `\n${item.fullName} ${item.headline}`
+      });
       response = "🔄 Service restart initiated";
       // Here you would call your actual service restart logic
     } else if (text.includes('metrics')) {
