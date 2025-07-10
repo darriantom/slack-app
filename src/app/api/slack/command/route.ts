@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     let response = '';
     
     // Example service-related command processing based on input text
-    if (text.includes('search')) {
+    if (text.includes('linkedin')) {
       response = "🟢 Service is running normally";
     } else if (text.includes('restart')) {
       const run = await client.actor("2SyF0bVxmgGr8IVCZ").call(input);
@@ -46,10 +46,12 @@ export async function POST(request: NextRequest) {
       // Fetch and print Actor results from the run's dataset (if any)
       console.log('Results from dataset');
       const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      // console.log(items)
       items.forEach((item) => {
           console.dir(item);
+          response += `\n${item.fullName} ${item.headline}`
       });
-      response = "🔄 Service restart initiated";
+      // response = "🔄 Service restart initiated";
       // Here you would call your actual service restart logic
     } else if (text.includes('metrics')) {
       response = "📊 Service metrics:\n- Uptime: 99.9%\n- Response time: 120ms\n- Error rate: 0.01%";
