@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApifyClient } from 'apify-client';
+// import { ApifyClient } from 'apify-client';
 
 // Initialize the ApifyClient with API token
 // This function processes incoming Slack slash commands
